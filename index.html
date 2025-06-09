@@ -142,7 +142,7 @@
   </div>
 
   <div id="loading-screen" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; font-family: sans-serif; color: white; background: rgba(0, 0, 0, 0.6); padding: 10px 20px; border-radius: 8px; z-index: 999; text-align: center;">
-    Loading AR experience...<br>Please be mindful of your surroundings
+    Loading AR experience...<br>Please be ful of your surroundings
   </div>
 
   <div style="position: absolute; top: 20px; left: 20px; z-index: 999;">
@@ -172,7 +172,7 @@
     </div>
   </div>
 
-  <a-scene mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1;" color-space="sRGB" renderer="precision: high; antialias: false; colorManagement: true" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+  <a-scene ar-image="imageTargetSrc: ./targets.mind; maxTrack: 1;" color-space="sRGB" renderer="precision: high; antialias: false; colorManagement: true" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
 
     <a-assets>
       <a-asset-item id="theModel" src="./myModel.glb"></a-asset-item>
