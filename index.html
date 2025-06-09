@@ -101,116 +101,78 @@
       padding: 30px;
       border-radius: 10px;
       max-width: 90%;
-      max-height: 90%;
-      overflow-y: auto;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      text-align: left;
     }
     #help-modal-content h2 { margin-top: 0; text-align: center; }
-    #help-modal-content p { line-height: 1.6; }
-    #help-modal-content ul { list-style-type: none; padding: 0; margin: 0 0 20px 0; }
-    #help-modal-content ul li { margin-bottom: 10px; padding-left: 20px; position: relative; }
-    #help-modal-content ul li::before { content: '➡️'; position: absolute; left: 0; color: #007bff; }
     #close-help-button { margin-top: 25px; padding: 10px 25px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; }
-    #close-help-button:hover { background-color: #0056b3; }
     #help-button {
       position: absolute;
       top: 20px; right: 120px; width: 40px; height: 40px;
       display: flex; justify-content: center; align-items: center;
       font-size: 20px; font-weight: bold; background-color: rgba(0, 0, 0, 0.8);
       color: white; border: none; border-radius: 50%; cursor: pointer;
-      z-index: 999; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 999;
     }
-    #help-button:hover { background-color: rgba(0, 0, 0, 0.9); }
   </style>
 </head>
 <body>
 
   <div id="welcome-message">
     <h1>AR Experience</h1>
-    <p class="instructions">
-      To begin, please allow camera access, then point your device at the image marker below.
-    </p>
+    <p class="instructions">Allow camera access, then point your device at the image marker.</p>
     <div id="target-image-previews">
       <div class="target-preview-item">
         <img src="./myTarget.jpg" alt="Preview of artwork marker" class="preview-image">
       </div>
     </div>
-    <p class="note">
-      The 3D model will appear on your screen! Tap the <strong>'i'</strong> button for help.
-    </p>
+    <p class="note">Tap the <strong>'i'</strong> button for help.</p>
   </div>
-
   <div id="loading-screen" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; font-family: sans-serif; color: white; background: rgba(0, 0, 0, 0.6); padding: 10px 20px; border-radius: 8px; z-index: 999; text-align: center;">
-    Loading AR experience...<br>Please be ful of your surroundings
+    Loading AR...
   </div>
-
   <div style="position: absolute; top: 20px; left: 20px; z-index: 999;">
     <a href="https://www.instagram.com/qrcky/" target="_blank">
-      <img src="./insta.png" alt="Instagram" style="height: 28px; opacity: 0.8; cursor: pointer;" />
+      <img src="./insta.png" alt="Instagram" style="height: 28px; opacity: 0.8;" />
     </a>
   </div>
-
   <button id="help-button">i</button>
-
   <button onclick="window.open('https://www.qrcky.net/', '_blank')" style="position: absolute; top: 20px; right: 20px; padding: 6px 14px; font-size: 14px; background-color: rgba(0, 0, 0, 0.8); color: white; border: none; border-radius: 6px; cursor: pointer; z-index: 999; height: 40px;">
     Website
   </button>
-
   <div id="help-modal">
     <div id="help-modal-content">
       <h2>How to Use This AR Experience</h2>
-      <p>Follow these simple steps:</p>
-      <ul>
-        <li>Point your device's camera at the designated artwork marker.</li>
-        <li>Once detected, the art will come to life as a 3D model!</li>
-        <li>Move your device around the marker to view the model from all angles.</li>
-        <li>Ensure good lighting for best results.</li>
-        <li>If the model disappears, simply re-point your camera at the marker.</li>
-      </ul>
+      <p>Point your camera at the marker to see the 3D model. Move around to see it from different angles.</p>
       <button id="close-help-button">Got It!</button>
     </div>
   </div>
 
-<a-scene
-  mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1;"
-  color-space="sRGB"
-  renderer="precision: high; antialias: false; colorManagement: true"
-  vr-mode-ui="enabled: false"
-  device-orientation-permission-ui="enabled: false"
-  embedded
->
-  <a-assets>
-    <a-asset-item id="theModel" src="./myModel.glb"></a-asset-item>
-  </a-assets>
+  <a-scene
+    mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1;"
+    color-space="sRGB"
+    renderer="colorManagement: true, physicallyCorrectLights"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+  >
+    <a-assets>
+      <a-asset-item id="theModel" src="./myModel.glb"></a-asset-item>
+    </a-assets>
 
-  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-camera position="0 0 0" look-controls="enabled: false">
+      <a-light type="ambient" color="#FFF" intensity="0.5"></a-light>
+      <a-light type="directional" color="#FFF" intensity="1" position="-1 2 1"></a-light>
+    </a-camera>
 
-  <a-entity mindar-image-target="targetIndex: 0">
-    <a-gltf-model
-      src="#theModel"
-      position="0 0 0"
-      rotation="0 0 0"
-      scale="1 1 1"
-    ></a-gltf-model>
-  </a-entity>
-</a-scene>
-
-
-  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
-  <a-entity mindar-image-target="targetIndex: 0">
-    <a-gltf-model
-      src="#theModel"
-      position="0 0 0"
-      rotation="0 0 0"
-      scale="1 1 1"
-    ></a-gltf-model>
-  </a-entity>
-</a-scene>
-
-
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-gltf-model
+        src="#theModel"
+        position="0 0 0"
+        rotation="0 0 0"
+        scale="0.3 0.3 0.3" 
+      ></a-gltf-model>
+    </a-entity>
+  </a-scene>
   <script>
+    // The JavaScript remains largely the same as it correctly handles the UI
     document.addEventListener('DOMContentLoaded', () => {
       const sceneEl = document.querySelector('a-scene');
       const loadingScreen = document.getElementById('loading-screen');
@@ -229,7 +191,7 @@
       
       const showHelpModal = () => {
         helpModal.style.display = 'flex';
-        setTimeout(() => { // Timeout ensures the display:flex is applied before the class change
+        setTimeout(() => {
             helpModal.classList.add('visible');
             helpModal.classList.remove('hidden');
         }, 10);
@@ -246,27 +208,23 @@
         }, { once: true });
       };
 
-      // Hide the welcome message after a few seconds
       if (welcomeMessage) {
         setTimeout(() => {
           hideElement(welcomeMessage);
-        }, 4000); // Increased time slightly
+        }, 4000);
       }
       
-      // Event listener for when the scene and its assets are loaded
       sceneEl.addEventListener('loaded', () => {
         if (loadingScreen) {
           hideElement(loadingScreen);
         }
       });
       
-      // Help Modal Logic
       if (helpButton && helpModal && closeHelpButton) {
         helpButton.addEventListener('click', showHelpModal);
         closeHelpButton.addEventListener('click', hideHelpModal);
       }
 
-      // Optional: Console logs for debugging
       sceneEl.addEventListener('targetFound', event => {
         console.log("✅ Target Found", event);
       });
