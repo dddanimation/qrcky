@@ -148,11 +148,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1; filterMinCF: 0.001; filterBeta: 10; warmupTolerance: 5;"
-    color-space="sRGB"
-    renderer="colorManagement: true, physicallyCorrectLights"
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false"
+    mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1; filterMinCF: 0.0005; filterBeta: 0.01; missTolerance: 20; warmupTolerance: 15" color-space="sRGB" renderer="precision: high; antialias: false; colorManagement: true" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false"
   >
     <a-assets>
       <a-asset-item id="theModel" src="./myModel.glb"></a-asset-item>
