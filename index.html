@@ -147,7 +147,7 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1;"
+    mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1; filterMinCF: 0.001; filterBeta: 10; warmupTolerance: 5;"
     color-space="sRGB"
     renderer="colorManagement: true, physicallyCorrectLights"
     vr-mode-ui="enabled: false"
@@ -167,14 +167,17 @@
         src="#theModel"
         position="0 0 0"
         rotation="0 0 0"
-        scale="0.25 0.25 0.25" 
+        scale="0.25 0.25 0.25"
+        animation="property: scale; to: 0.25 0.25 0.25; from: 0.001 0.001 0.001; dur: 500; easing: easeInOutQuad; startEvents: ar-start; pauseEvents: ar-pause"
+        animation__fadeout="property: scale; to: 0.001 0.001 0.001; from: 0.25 0.25 0.25; dur: 300; easing: easeInQuad; startEvents: ar-pause"
+        visible="false"
       ></a-gltf-model>
     </a-entity>
   </a-scene>
   <script>
-    // The JavaScript remains largely the same as it correctly handles the UI
     document.addEventListener('DOMContentLoaded', () => {
       const sceneEl = document.querySelector('a-scene');
+      const arModel = document.querySelector('a-gltf-model');
       const loadingScreen = document.getElementById('loading-screen');
       const welcomeMessage = document.getElementById('welcome-message');
       const helpButton = document.getElementById('help-button');
@@ -225,6 +228,15 @@
         closeHelpButton.addEventListener('click', hideHelpModal);
       }
 
+      sceneEl.addEventListener('ar-start', () => {
+        arModel.setAttribute('visible', 'true');
+        arModel.emit('ar-start');
+      });
+
+      sceneEl.addEventListener('ar-pause', () => {
+        arModel.emit('ar-pause');
+      });
+      
       sceneEl.addEventListener('targetFound', event => {
         console.log("✅ Target Found", event);
       });
