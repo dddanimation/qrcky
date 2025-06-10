@@ -148,9 +148,31 @@
   </div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./targets.mind; maxTrack: 1; filterMinCF: 0.0005; filterBeta: 0.01; missTolerance: 20; warmupTolerance: 15" color-space="sRGB" renderer="precision: high; antialias: false; colorManagement: true" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false"
+    // The 'mindar-image' properties below have been adjusted for faster performance.
+    mindar-image="
+      imageTargetSrc: ./targets.mind;
+      maxTrack: 1;
+      
+      // These values are tuned for faster response.
+      // They might make tracking slightly more jittery.
+      // Adjust them to find the best balance for your needs.
+      filterMinCF: 0.001; 
+      filterBeta: 10;
+      
+      // warmupTolerance: How many frames to 'see' the target before it appears.
+      // Lowered from 15 to 5 for a much faster start.
+      warmupTolerance: 5;
+      
+      // missTolerance: How many frames the target can be 'lost' before it disappears.
+      // Lowered from 20 to 10 for a quicker fade-out.
+      missTolerance: 10;"
+      
+    color-space="sRGB" 
+    renderer="precision: high; antialias: false; colorManagement: true" 
+    vr-mode-ui="enabled: false" 
+    device-orientation-permission-ui="enabled: false"
   >
-    <a-assets>
+  <a-assets>
       <a-asset-item id="theModel" src="./myModel.glb"></a-asset-item>
     </a-assets>
 
@@ -165,13 +187,15 @@
         position="0 0 0"
         rotation="0 0 0"
         scale="0.25 0.25 0.25"
-        visible="false" animation="property: scale; from: 0.001 0.001 0.001; to: 0.25 0.25 0.25; dur: 500; easing: easeInOutQuad; startEvents: model-fade-in;"
+        visible="false" 
+        animation="property: scale; from: 0.001 0.001 0.001; to: 0.25 0.25 0.25; dur: 500; easing: easeInOutQuad; startEvents: model-fade-in;"
         animation__fadeout="property: scale; from: 0.25 0.25 0.25; to: 0.001 0.001 0.001; dur: 300; easing: easeInQuad; startEvents: model-fade-out;"
       ></a-gltf-model>
     </a-entity>
   </a-scene>
 
   <script>
+    // Your JavaScript remains unchanged as it is already correct.
     document.addEventListener('DOMContentLoaded', () => {
       // UI elements
       const loadingScreen = document.getElementById('loading-screen');
