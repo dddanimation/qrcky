@@ -5,7 +5,7 @@
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <style>
-    /* CSS remains the same */
+    /* CSS is unchanged */
     body {
       margin: 0;
       overflow: hidden;
@@ -148,23 +148,19 @@
   </div>
 
   <a-scene
-    // The 'mindar-image' properties below have been adjusted for faster performance.
+    // The 'mindar-image' properties are now a balance of speed and stability.
     mindar-image="
       imageTargetSrc: ./targets.mind;
       maxTrack: 1;
       
-      // These values are tuned for faster response.
-      // They might make tracking slightly more jittery.
-      // Adjust them to find the best balance for your needs.
-      filterMinCF: 0.001; 
-      filterBeta: 10;
+      // The filter parameters have been reverted to their original, smoother values
+      // to eliminate the shakiness.
+      filterMinCF: 0.0005; 
+      filterBeta: 0.01;
       
-      // warmupTolerance: How many frames to 'see' the target before it appears.
-      // Lowered from 15 to 5 for a much faster start.
+      // The tolerance values remain low for a fast response.
+      // This will make the model appear and disappear quickly, but track smoothly.
       warmupTolerance: 5;
-      
-      // missTolerance: How many frames the target can be 'lost' before it disappears.
-      // Lowered from 20 to 10 for a quicker fade-out.
       missTolerance: 10;"
       
     color-space="sRGB" 
@@ -195,7 +191,7 @@
   </a-scene>
 
   <script>
-    // Your JavaScript remains unchanged as it is already correct.
+    // Your JavaScript remains unchanged.
     document.addEventListener('DOMContentLoaded', () => {
       // UI elements
       const loadingScreen = document.getElementById('loading-screen');
@@ -252,21 +248,17 @@
         closeHelpButton.addEventListener('click', hideHelpModal);
       }
       
-      // CORRECTED: Listen for 'targetFound' on the marker entity
       arTarget.addEventListener('targetFound', () => {
         console.log("✅ Target Found");
-        arModel.setAttribute('visible', true); // Make the model visible
-        arModel.emit('model-fade-in');       // Trigger the fade-in animation
+        arModel.setAttribute('visible', true);
+        arModel.emit('model-fade-in');
       });
 
-      // CORRECTED: Listen for 'targetLost' on the marker entity
       arTarget.addEventListener('targetLost', () => {
         console.log("❌ Target Lost");
-        arModel.emit('model-fade-out');       // Trigger the fade-out animation
+        arModel.emit('model-fade-out');
       });
 
-      // CORRECTED: Listen for when the fade-out animation finishes
-      // Then set the model to invisible for good measure.
       arModel.addEventListener('animationcomplete__fadeout', () => {
         console.log("Animation complete, hiding model.");
         arModel.setAttribute('visible', false);
