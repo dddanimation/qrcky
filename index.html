@@ -5,6 +5,7 @@
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <style>
+    /* CSS remains the same */
     body {
       margin: 0;
       overflow: hidden;
@@ -162,27 +163,30 @@
       <a-light type="directional" color="#FFF" intensity="1" position="-1 2 1"></a-light>
     </a-camera>
 
-    <a-entity mindar-image-target="targetIndex: 0">
+    <a-entity id="ar-target" mindar-image-target="targetIndex: 0">
       <a-gltf-model
-        src="#theModel"
+        id="ar-model" src="#theModel"
         position="0 0 0"
         rotation="0 0 0"
         scale="0.25 0.25 0.25"
-        animation="property: scale; to: 0.25 0.25 0.25; from: 0.001 0.001 0.001; dur: 500; easing: easeInOutQuad; startEvents: ar-start; pauseEvents: ar-pause"
-        animation__fadeout="property: scale; to: 0.001 0.001 0.001; from: 0.25 0.25 0.25; dur: 300; easing: easeInQuad; startEvents: ar-pause"
-        visible="false"
+        visible="false" animation="property: scale; from: 0.001 0.001 0.001; to: 0.25 0.25 0.25; dur: 500; easing: easeInOutQuad; startEvents: model-fade-in;"
+        animation__fadeout="property: scale; from: 0.25 0.25 0.25; to: 0.001 0.001 0.001; dur: 300; easing: easeInQuad; startEvents: model-fade-out;"
       ></a-gltf-model>
     </a-entity>
   </a-scene>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const sceneEl = document.querySelector('a-scene');
-      const arModel = document.querySelector('a-gltf-model');
+      // UI elements
       const loadingScreen = document.getElementById('loading-screen');
       const welcomeMessage = document.getElementById('welcome-message');
       const helpButton = document.getElementById('help-button');
       const helpModal = document.getElementById('help-modal');
       const closeHelpButton = document.getElementById('close-help-button');
+
+      // AR elements
+      const arTarget = document.querySelector('#ar-target');
+      const arModel = document.querySelector('#ar-model');
 
       const hideElement = (element) => {
         if (!element || element.classList.contains('hidden')) return;
@@ -217,7 +221,7 @@
         }, 4000);
       }
       
-      sceneEl.addEventListener('loaded', () => {
+      document.querySelector('a-scene').addEventListener('loaded', () => {
         if (loadingScreen) {
           hideElement(loadingScreen);
         }
@@ -227,21 +231,25 @@
         helpButton.addEventListener('click', showHelpModal);
         closeHelpButton.addEventListener('click', hideHelpModal);
       }
-
-      sceneEl.addEventListener('ar-start', () => {
-        arModel.setAttribute('visible', 'true');
-        arModel.emit('ar-start');
-      });
-
-      sceneEl.addEventListener('ar-pause', () => {
-        arModel.emit('ar-pause');
-      });
       
-      sceneEl.addEventListener('targetFound', event => {
-        console.log("✅ Target Found", event);
+      // CORRECTED: Listen for 'targetFound' on the marker entity
+      arTarget.addEventListener('targetFound', () => {
+        console.log("✅ Target Found");
+        arModel.setAttribute('visible', true); // Make the model visible
+        arModel.emit('model-fade-in');       // Trigger the fade-in animation
       });
-      sceneEl.addEventListener('targetLost', event => {
-        console.log("❌ Target Lost", event);
+
+      // CORRECTED: Listen for 'targetLost' on the marker entity
+      arTarget.addEventListener('targetLost', () => {
+        console.log("❌ Target Lost");
+        arModel.emit('model-fade-out');       // Trigger the fade-out animation
+      });
+
+      // CORRECTED: Listen for when the fade-out animation finishes
+      // Then set the model to invisible for good measure.
+      arModel.addEventListener('animationcomplete__fadeout', () => {
+        console.log("Animation complete, hiding model.");
+        arModel.setAttribute('visible', false);
       });
     });
   </script>
